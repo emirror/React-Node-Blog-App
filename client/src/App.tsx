@@ -1,15 +1,28 @@
-import { useState } from 'react'
-
+import { ConfigProvider, Layout } from "antd"
+import HomePage from "./pages"
+import Menu from "./Components/Menu";
 
 function App() {
-
+  const { Header, Content, Footer } = Layout;
   return (
     <>
-      <h1 className="text-3xl font-bold underline">
-        Hello world!
-      </h1>
+      <ConfigProvider  theme={{
+      token: {
+        colorPrimary: '#00b96b',
+      },
+    }}>
+        <Layout>
+          <Header>
+            <Menu />
+          </Header>
+          <Content>Content</Content>
+          <Footer>Footer</Footer>
+        </Layout>
+        <HomePage />
+      </ConfigProvider>
+
     </>
   )
 }
 
-export default App
+export default App;
