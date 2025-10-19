@@ -1,8 +1,18 @@
 import express from "express"
 import routes from "./routes/index.js" // Import routes
 import errorHandler from "./middlewares/error-handler.js";
-
+import { sequelize } from "./config/database.js";
 const app = express();
+
+
+
+await sequelize.authenticate().then(() => {
+    console.log("Database connected");
+}).catch((err) => {
+    console.log("Error: ", err);
+});
+
+await sequelize.sync()
 
 const PORT = 5000
 
