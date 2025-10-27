@@ -2,6 +2,8 @@ import express from "express"
 import routes from "./routes/index.js" // Import routes
 import errorHandler from "./middlewares/error-handler.js";
 import { sequelize } from "./config/database.js";
+import User from "./models/user.js";
+
 const app = express();
 
 

@@ -1,4 +1,4 @@
-import Article from "../../models/article";
+import Article from "../../models/article.js";
 
 class ArticleController {
     list(req, res) {
