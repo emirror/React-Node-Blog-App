@@ -1,0 +1,68 @@
+import Article from "../../models/article.js";
+import { notFoundError } from "../../utils/error.js";
+
+class ArticleController {
+    async list(req, res) {
+        // const articles = await Article.findPaginate(req.query.page, {
+        //     include: ['user'],
+        // });
+        const articles = await Article.findAll();
+        res.json(articles);
+    }
+
+
+    async get(req, res) {
+        const { id } = req.params;
+
+        const articles = await Article.find(id, { include: ["user"] });
+
+        if (!articles) {
+            throw new notFoundError("Article not found");
+        }
+
+        res.json(articles);
+    }
+
+
+    async create(req, res) {
+        const { title, content } = req.body;
+
+        const articles = await Article.create({ title, content, userId: req.user.id });
+
+        res.json(articles);
+    }
+
+    async update(req, res) {
+        const { id } = req.params;
+        const { title, content } = req.body;
+
+        const article = await Article.find(id);
+
+        if (!article) {
+            throw new notFoundError("Article not found");
+        }
+
+        article.title = title;
+        article.content = content;
+
+        await article.save();
+
+        res.json(article);
+    }
+
+    async delete(req, res) {
+        const { id } = req.params;
+
+        const article = await Article.find(id);
+
+        if (!article) {
+            throw new notFoundError("Article not found");
+        }
+
+        await article.destroy();
+
+        res.json(article);
+    }
+}
+
+export default new ArticleController();
