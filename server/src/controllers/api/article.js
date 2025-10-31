@@ -1,11 +1,9 @@
 import Article from "../../models/article.js";
-import { notFoundError } from "../../utils/error.js";
+import { NotFoundError } from "../../utils/error.js";
 
 class ArticleController {
     async list(req, res) {
-        // const articles = await Article.findPaginate(req.query.page, {
-        //     include: ['user'],
-        // });
+        
         const articles = await Article.findAll();
         res.json(articles);
     }
@@ -17,7 +15,7 @@ class ArticleController {
         const articles = await Article.find(id, { include: ["user"] });
 
         if (!articles) {
-            throw new notFoundError("Article not found");
+            throw new NotFoundError("Article not found");
         }
 
         res.json(articles);
@@ -39,7 +37,7 @@ class ArticleController {
         const article = await Article.find(id);
 
         if (!article) {
-            throw new notFoundError("Article not found");
+            throw new NotFoundError("Article not found");
         }
 
         article.title = title;
@@ -56,7 +54,7 @@ class ArticleController {
         const article = await Article.find(id);
 
         if (!article) {
-            throw new notFoundError("Article not found");
+            throw new NotFoundError("Article not found");
         }
 
         await article.destroy();

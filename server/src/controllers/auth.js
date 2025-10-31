@@ -1,49 +1,73 @@
-import errorHandler from "../middlewares/error-handler";
-import User from "../models/user";
-import { BadRequestError } from "../utils/error";
+import errorHandler from "../middlewares/error-handler.js";
+import User from "../models/user.js";
+import { BadRequestError } from "../utils/error.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 class AuthController {
 
-    async login(req, res) {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            new BadRequestError("Username and password are required");
+    async login(req, res, next) {
+        try {
+            const { username, password } = req.body || {};
+            if (!username || !password) {
+                return next(new BadRequestError("Username and password are required"));
+            }
+
+            const user = await User.scope("withPassword").findOne({ where: { username } });
+
+            if (!user || !bcrypt.compareSync(password, user.password)) {
+                return next(new BadRequestError("Invalid username or password"));
+            }
+
+            user.setDataValue("password", undefined);
+
+            const token = jwt.sign(
+                { id: user.id, username: user.username, role: user.role },
+                process.env.JWT_SECRET,
+                {
+                    expiresIn: "1000s",
+                }
+            );
+
+            res.json({
+                ...user.dataValues,
+                token,
+            });
+
+        } catch (err) {
+            return next(err);
         }
-
-        const user = await User.findOne({ where: { username } });
-
-        if (!user || !bcrypt.compareSync(password, user.password)) {
-            throw new BadRequestError("Invalid username or password");
-        }
-
-        
-         res.json(newUser);
-
     }
 
-    async register(req, res) {
-        const { username, password } = req.body;
-        if (!username || !password) {
-            new BadRequestError("Username and password are required");
-        }
-
+    async register(req, res, next) {
         try {
-            // const existingUser = await User.findOne({ where: { username } });
-            // if (existingUser) {
-            //     throw new BadRequestError("Username already exists");
-            // }
-            const hashPassowrd = bcrypt.hashSync(password, 10);
-            const newUser = await User.create({ username, hashPassowrd });
-            res.json(newUser);
+            const { username, password, role } = req.body || {};
+
+            if (!username || !password) {
+                return next(new BadRequestError('username and password are required'));
+            }
+
+            const hashPassword = bcrypt.hashSync(password, 10);
+            const newUser = await User.create({ username, password: hashPassword });
+            newUser.setDataValue("password", undefined);
+            return res.json(newUser);
 
         } catch (error) {
             if (error?.original?.code === 'ER_DUP_ENTRY') {
-                throw new BadRequestError("Username already exists");
+                return next(new BadRequestError("Username already exists"));
             }
-
-            throw errorHandler;
+            return next(error);
         }
+    }
+
+    logout(req, res, next) {
+        req.session.destroy((error) => {
+            if (!error) {
+                return res.redirect(req.headers.referer || '/');
+            } else {
+                return next(error);
+            }
+        });
     }
 
 }

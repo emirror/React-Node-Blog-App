@@ -6,7 +6,7 @@ import User from "./models/user.js";
 
 const app = express();
 
-
+app.use(express.json());
 
 await sequelize.authenticate().then(() => {
     console.log("Database connected");

@@ -1,9 +1,9 @@
 import express from "express"
-import ArticleController from "../../controllers/admin/article.js";
+// import ArticleController from "../../controllers/admin/article.js";
 
 const router = express.Router();
 
-router.get('/', ArticleController.list);
+// router.get('/', ArticleController.list);
 
 
 export default router;
