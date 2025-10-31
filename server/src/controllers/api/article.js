@@ -10,9 +10,10 @@ class ArticleController {
 
 
     async get(req, res) {
+        
         const { id } = req.params;
 
-        const articles = await Article.find(id, { include: ["user"] });
+        const articles = await Article.findByPk(id);
 
         if (!articles) {
             throw new NotFoundError("Article not found");
@@ -34,7 +35,7 @@ class ArticleController {
         const { id } = req.params;
         const { title, content } = req.body;
 
-        const article = await Article.find(id);
+        const article = await Article.findByPk(id);
 
         if (!article) {
             throw new NotFoundError("Article not found");
@@ -51,7 +52,7 @@ class ArticleController {
     async delete(req, res) {
         const { id } = req.params;
 
-        const article = await Article.find(id);
+        const article = await Article.findByPk(id);
 
         if (!article) {
             throw new NotFoundError("Article not found");
