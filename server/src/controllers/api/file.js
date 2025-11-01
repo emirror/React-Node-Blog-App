@@ -1,10 +1,7 @@
 
 class FileController {
-      async upload(req, res) {
-        
-        res.json({ message: "File uploaded successfully" });
-        
-      
+    upload(req, res) {
+      res.json(req.file.path.split("/").splice(1).join("/"));
     }
 }
 
