@@ -1,23 +1,63 @@
-import type { MenuProps } from 'antd';
-import { Menu as AntMenu } from 'antd';
+import { Menu as AntMenu, Button, Space } from "antd";
+import type { MenuProps } from "antd";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import { LogoutOutlined } from "@ant-design/icons";
 
-type MenuItem = Required<MenuProps>['items'][number];
+type MenuItem = Required<MenuProps>["items"][number];
 
-const items: MenuItem[] = [
+export default function Menu() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isLoggedIn, user, logout } = useAuth();
+
+  const items: MenuItem[] = [
     {
-        label: 'Home',
-        key: 'home',
+      label: <Link to="/articles">Articles</Link>,
+      key: "/articles",
     },
-    {
-        label: 'Articles',
-        key: 'artices',
-    },
+  ];
 
-];
+  const handleMenuClick = ({ key }: { key: string }) => {
+    navigate(key);
+  };
 
-const Menu: React.FC = () => {
+  const handleLogout = () => {
+    logout && logout();
+    navigate("/login");
+  };
 
-    return <AntMenu mode="horizontal" items={items} />;
-};
+  if (!isLoggedIn) {
+    return null;
+  }
 
-export default Menu;
+  return (
+    <div className="flex justify-between items-center w-full">
+      <div className="flex-1">
+        <AntMenu
+          mode="horizontal"
+          items={items}
+          selectedKeys={[location.pathname]}
+          onClick={handleMenuClick}
+          style={{
+            lineHeight: "64px",
+            borderBottom: "none",
+            backgroundColor: "transparent",
+          }}
+        />
+      </div>
+      <Space className="px-4">
+        <span className="text-white">{user?.username}</span>
+        <span className="text-white opacity-75">({user?.role})</span>
+        <Button
+          type="text"
+          icon={<LogoutOutlined />}
+          onClick={handleLogout}
+          className="!text-white hover:!text-orange-300"
+        >
+          Logout
+        </Button>
+      </Space>
+    </div>
+  );
+}

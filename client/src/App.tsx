@@ -1,25 +1,49 @@
-import { ConfigProvider, Layout } from "antd"
-import HomePage from "./pages"
+
+import { Layout } from "antd";
 import Menu from "./Components/Menu";
+import useAuth from "./hooks/useAuth";
+import { Navigate, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   const { Header, Content, Footer } = Layout;
+  const { isLoggedIn, loading } = useAuth();
+
+  if (loading) {
+    return null;
+  }
   return (
     <>
-      <ConfigProvider  theme={{
-      token: {
-        colorPrimary: '#00b96b',
-      },
-    }}>
-        <Layout>
-          <Header>
+
+      <Layout className="tw">
+        {isLoggedIn && (
+          <Header
+            style={{
+              backgroundColor: "#000080",
+              padding: "0 50px",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
             <Menu />
           </Header>
-          <Content>Content</Content>
-          <Footer>Footer</Footer>
-        </Layout>
-        <HomePage />
-      </ConfigProvider>
+        )}
+        <Content>
+          <Routes>
+            <Route
+              path="/login"
+              element={isLoggedIn ? <Navigate to="/articles" replace /> : <Login />}
+            />
+            <Route
+              path="/register"
+              element={isLoggedIn ? <Navigate to="/articles" replace /> : <Register />}
+            />
+            <Route path="/" element={isLoggedIn ? <Navigate to="/articles" replace /> : <Navigate to="/login" replace />} />
+          </Routes>
+        </Content>
+        <Footer>Footer</Footer>
+      </Layout>
 
     </>
   )
