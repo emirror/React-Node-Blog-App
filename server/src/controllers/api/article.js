@@ -3,37 +3,38 @@ import { NotFoundError } from "../../utils/error.js";
 
 class ArticleController {
     async list(req, res) {
-        
-        const articles = await Article.findAll();
-        res.json(articles);
+
+        const data = await Article.findPaginate(req.query.page, {
+            include: ["user"],
+        });
+        res.json(data);
     }
 
 
     async get(req, res) {
-        
+
         const { id } = req.params;
 
-        const articles = await Article.findByPk(id);
-
-        if (!articles) {
+        const article = await Article.find(id, { include: ["user"] });
+        if (!article) {
             throw new NotFoundError("Article not found");
         }
 
-        res.json(articles);
+        res.json(article);
     }
 
 
     async create(req, res) {
-        const { title, content } = req.body;
+        const { title, content, image } = req.body;
 
-        const articles = await Article.create({ title, content, userId: req.user.id });
+        const articles = await Article.create({ title, content, image, userId: req.user.id });
 
         res.json(articles);
     }
 
     async update(req, res) {
         const { id } = req.params;
-        const { title, content } = req.body;
+        const { title, content, image } = req.body;
 
         const article = await Article.findByPk(id);
 
@@ -43,6 +44,7 @@ class ArticleController {
 
         article.title = title;
         article.content = content;
+        article.image = image;
 
         await article.save();
 
