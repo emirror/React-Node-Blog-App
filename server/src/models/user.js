@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
+import Article from "./article.js";
 const User = sequelize.define("user",
     {
 
@@ -29,5 +30,9 @@ const User = sequelize.define("user",
         },
     }
 );
+
+//join tables
+User.hasMany(Article);
+Article.belongsTo(User);
 
 export default User;
