@@ -31,27 +31,23 @@ request.interceptors.response.use(
     return response;
   },
   function (error: AxiosError) {
-    // Handle 401 unauthorized
     if (error.response?.status === 401) {
       removeToken();
       if (window.location.pathname !== "/login") {
         window.location.href = "/login";
       }
-      // Don't show error notification for 401 redirect
       return Promise.reject(error);
     }
 
-    // Show error notification for other errors
     handleError(error);
 
     return Promise.reject(error);
   }
 );
 
-// Also add error handling for requestWithoutAuth
+//handling for request without auth
 requestWithoutAuth.interceptors.response.use(
   function (response) {
-    console.log(response);
     
     return response;
   },

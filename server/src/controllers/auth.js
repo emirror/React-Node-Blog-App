@@ -39,6 +39,10 @@ class AuthController {
         }
     }
 
+    user(req, res) {
+        return res.json(req.user);
+    }
+
     async register(req, res, next) {
         try {
             const { username, password, role } = req.body || {};

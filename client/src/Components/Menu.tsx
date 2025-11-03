@@ -46,7 +46,7 @@ export default function Menu() {
           }}
         />
       </div>
-      <Space className="px-4">
+      <Space align="center" className="px-4">
         <span className="text-white">{user?.username}</span>
         <span className="text-white opacity-75">({user?.role})</span>
         <Button
