@@ -33,10 +33,10 @@ export default function ArticleList() {
             </div>
           );
         }
-        const baseURL = import.meta.env.VITE_BASE_URL || "http://localhost:3000";
+        const baseURL = import.meta.env.VITE_BASE_URL || "http://localhost:5000";
         const imageUrl = image.startsWith("http") ? image : `${baseURL}/${image}`;
         return (
-          <Image src={imageUrl} alt="Article" width={80} height={60} className="object-cover rounded" />
+          <Image src={imageUrl} alt="Article" width={60} height={60} className="object-cover rounded-full" />
         );
       },
     },

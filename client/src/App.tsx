@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import ArticleList from "./pages/ArticleList";
+import CreateArticle from "./pages/CreateArticle";
+import ArticleDetail from "./pages/ArticleDetail";
 
 function App() {
   const { Header, Content, Footer } = Layout;
@@ -47,6 +49,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ArticleList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/articles/:id"
+              element={
+                <ProtectedRoute>
+                  <ArticleDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/articles/create"
+              element={
+                <ProtectedRoute requiredRole={["WRITER", "MODERATOR", "ADMIN"]}>
+                  <CreateArticle />
                 </ProtectedRoute>
               }
             />

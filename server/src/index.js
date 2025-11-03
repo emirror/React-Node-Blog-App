@@ -5,7 +5,6 @@ import { sequelize } from "./config/database.js";
 import User from "./models/user.js";
 import cors from "cors";
 const app = express();
-
 app.use(express.json());
 
 await sequelize.authenticate().then(() => {
@@ -15,10 +14,12 @@ await sequelize.authenticate().then(() => {
 });
 
 await sequelize.sync()
-app.use(cors('*'));
+app.use(cors('localhost:5173'));
+app.use(express.static("public"));
+
 const PORT = 5000
 
-app.use(routes); // Use the imported routes
+app.use(routes);
 
 app.use(errorHandler);
 

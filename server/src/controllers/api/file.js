@@ -1,7 +1,10 @@
+import path from "path";
 
 class FileController {
     upload(req, res) {
-      res.json(req.file.path.split("/").splice(1).join("/"));
+      const filePath = path.relative("",req.file.path).replace(/\\/g, "/")
+     const staticPath= filePath.split("/").splice(1).join("/")
+      res.json(staticPath);
     }
 }
 

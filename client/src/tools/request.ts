@@ -4,11 +4,11 @@ import { getToken, removeToken } from "../utils/token";
 import { handleError } from "../utils/errorHandler";
 
 const request = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:5000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
 });
 
 export const requestWithoutAuth = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL || "http://localhost:5000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000",
 });
 
 request.interceptors.request.use(
@@ -31,15 +31,11 @@ request.interceptors.response.use(
     return response;
   },
   function (error: AxiosError) {
-    if (error.response?.status === 401) {
-      removeToken();
-      if (window.location.pathname !== "/login") {
-        window.location.href = "/login";
-      }
-      return Promise.reject(error);
-    }
 
-    handleError(error);
+
+      removeToken();
+      window.location.href = "/login";
+      handleError(error);
 
     return Promise.reject(error);
   }
@@ -48,7 +44,7 @@ request.interceptors.response.use(
 //handling for request without auth
 requestWithoutAuth.interceptors.response.use(
   function (response) {
-    
+
     return response;
   },
   function (error: AxiosError) {

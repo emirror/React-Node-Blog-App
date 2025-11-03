@@ -1,4 +1,4 @@
-import { Button, Form, Input, Card, Typography } from "antd";
+import { Button, Form, Input, Card, Typography, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import { handleSuccess } from "../utils/errorHandler";
@@ -11,9 +11,9 @@ export default function Login() {
 
   async function onFinish(data: { username: string; password: string }) {
 
-      login && await login(data);
-      handleSuccess("Login successful");
-      navigate("/articles");
+    login && await login(data);
+    message.success(`Welcome, ${data.username}!`);
+    navigate("/articles");
   }
 
   return (
