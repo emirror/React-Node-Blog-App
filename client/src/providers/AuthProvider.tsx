@@ -11,7 +11,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   const login = async (data: { username: string; password: string }): Promise<void> => {
 
-
+    setLoading(true);
     const { data: responseData } = await requestWithoutAuth.post("/login", data);
     setToken(responseData.token);
     if (responseData.id && responseData.username) {
@@ -21,6 +21,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
         role: responseData.role || "USER",
       });
       setIsLoggedIn(true);
+      setLoading(false);
+
     }
 
   }

@@ -5,6 +5,8 @@ import useAuth from "./hooks/useAuth";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import ArticleList from "./pages/ArticleList";
 
 function App() {
   const { Header, Content, Footer } = Layout;
@@ -40,6 +42,14 @@ function App() {
               element={isLoggedIn ? <Navigate to="/articles" replace /> : <Register />}
             />
             <Route path="/" element={isLoggedIn ? <Navigate to="/articles" replace /> : <Navigate to="/login" replace />} />
+            <Route
+              path="/articles"
+              element={
+                <ProtectedRoute>
+                  <ArticleList />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </Content>
         <Footer>Footer</Footer>
