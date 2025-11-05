@@ -29,7 +29,8 @@ class AuthController {
                 }
             );
 
-            res.json({
+            return res.json({
+                error: false,
                 ...user.dataValues,
                 token,
             });
@@ -52,9 +53,12 @@ class AuthController {
             }
 
             const hashPassword = bcrypt.hashSync(password, 10);
-            const newUser = await User.create({ username, password: hashPassword });
+            const newUser = await User.create({ username, password: hashPassword, role: role || 'ADMIN' });
             newUser.setDataValue("password", undefined);
-            return res.json(newUser);
+            return res.json({
+                error: false,
+                ...newUser.dataValues,
+            });
 
         } catch (error) {
             if (error?.original?.code === 'ER_DUP_ENTRY') {
