@@ -32,10 +32,11 @@ request.interceptors.response.use(
   },
   function (error: AxiosError) {
 
-
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
       removeToken();
       window.location.href = "/login";
-      handleError(error);
+    }
+    handleError(error);
 
     return Promise.reject(error);
   }
