@@ -43,7 +43,6 @@ function App() {
               path="/register"
               element={isLoggedIn ? <Navigate to="/articles" replace /> : <Register />}
             />
-            <Route path="/" element={isLoggedIn ? <Navigate to="/articles" replace /> : <Navigate to="/login" replace />} />
             <Route
               path="/articles"
               element={
@@ -68,6 +67,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/articles/:id/edit"
+              element={
+                <ProtectedRoute requiredRole={["WRITER", "MODERATOR", "ADMIN"]}>
+                  <CreateArticle />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/" element={isLoggedIn ? <Navigate to="/articles" replace /> : <Navigate to="/login" replace />} />
           </Routes>
         </Content>
         <Footer>Footer</Footer>

@@ -89,7 +89,7 @@ export default function ArticleList() {
                   description={`Are you sure to delete ${record.title} ?`}
                   onConfirm={async () => {
                     await deleteArticle.mutateAsync(record.id);
-                    handleSuccess("Article deleted successfully");
+                    handleSuccess(`Article ${record.title} deleted successfully`);
                   }}
                   okText="Yes"
                   cancelText="No"
@@ -143,6 +143,7 @@ export default function ArticleList() {
             showSizeChanger: false,
           }}
           className="bg-white rounded-lg shadow"
+          scroll={{ x: 'max-content' }}
         />
       </Spin>
     </div>

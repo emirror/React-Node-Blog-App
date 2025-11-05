@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Form, Input, Button, Card, Typography, Upload, message, Space } from "antd";
 import { useArticle } from "../hooks/useArticles";
 import request from "../tools/request";
@@ -22,15 +22,19 @@ export default function CreateArticle() {
   const [form] = Form.useForm();
 
   // Set initial values when editing
-  if (isEdit && article && !form.getFieldValue("title")) {
-    form.setFieldsValue({
-      title: article.title,
-      content: article.content,
-    });
-    if (article.image) {
+  useEffect(() => {
+
+    if (article && article.image) {
       setImageUrl(article.image);
     }
-  }
+
+  }, []);
+
+  const initialValues = isEdit && article ? {
+    title: article.title,
+    content: article.content,
+    image: article.image,
+  } : {};
 
   const handleUpload = async (file: File) => {
     try {
@@ -43,12 +47,12 @@ export default function CreateArticle() {
         },
       });
 
-      const imagePath = data; 
+      const imagePath = data;
       const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000";
       const fullUrl = `${baseURL}/${imagePath}`;
       setImageUrl(fullUrl);
       message.success("Image uploaded successfully");
-      return false; 
+      return false;
     } catch (error) {
       return false;
     }
@@ -99,7 +103,8 @@ export default function CreateArticle() {
           name="article"
           onFinish={onFinish}
           layout="vertical"
-          size="large"
+          size="middle"
+          initialValues={initialValues}
         >
           <Form.Item
             label="Title"
